@@ -54,7 +54,7 @@
             };
 
             async function loadVideos() {
-                const res = await fetch('videos.txt');
+                const res = await fetch('videos.txt?v=' + Date.now());
                 const text = await res.text();
 
                 videos = text.trim().split('\n').map(line => {
