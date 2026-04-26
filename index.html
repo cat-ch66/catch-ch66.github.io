@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Video Main Menu</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+
+        <header>
+            <div class="header-content">
+                <span id="siteTitle">CIC Videos</span>
+                <div class="lang-buttons">
+                    <button onclick="setLanguage('en')" id="btn-en" class="active">EN</button>
+                    <button onclick="setLanguage('es')" id="btn-es">ES</button>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="container">
+                <!-- MAIN LIST -->
+                <div id="videoList" class="video-list"></div>
+
+                <!-- VIDEO PAGE -->
+                <div id="videoPage" class="hidden">
+                    <button class="back-btn" onclick="showList()" id="backBtn">← Back</button>
+                    <h2 id="videoTitle"></h2>
+                    <iframe id="videoFrame" src="" allowfullscreen></iframe>
+                    <p id="videoDescription" class="video-description"></p>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer" id="footerText">
+            2026 by Rachel Ibarra Channell
+        </footer>
+
+        <script>
+            let currentLang = 'en';
+            let videos = [];
+            const uiText = {
+                en: {
+                    title: "CIC Videos",
+                    back: "← Back",
+                    footer: "2026 by Rachel Ibarra Channell"
+                },
+                es: {
+                    title: "Vídeos CIC",
+                    back: "← Regresar",
+                    footer: "2026 por Rachel Ibarra Channell"
+                }
+            };
+
+            async function loadVideos() {
+                const res = await fetch('videos.txt');
+                const text = await res.text();
+
+                videos = text.trim().split('\n').map(line => {
+                    const [link, enTitle, enDesc, esTitle, esDesc] = line.split(',').map(x => x.trim());
+                    return { link, enTitle, enDesc, esTitle, esDesc };
+                });
+
+                renderList();
+            }
+
+            function setLanguage(lang) {
+                currentLang = lang;
+
+                document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+                document.getElementById('btn-es').classList.toggle('active', lang === 'es');
+
+                document.getElementById('siteTitle').innerText = uiText[lang].title;
+                document.getElementById('backBtn').innerText = uiText[lang].back;
+                document.getElementById('footerText').innerText = uiText[lang].footer;
+
+                renderList();
+
+                const videoPageVisible = !document.getElementById('videoPage').classList.contains('hidden');
+                if (videoPageVisible) {
+                    const index = document.getElementById('videoPage').dataset.index;
+                    openVideo(index);
+                }
+            }
+
+            function getEmbedLink(url) {
+                let videoId = '';
+
+                if (url.includes('v=')) {
+                    videoId = url.split('v=')[1].split('&')[0];
+                }
+                else if (url.includes('youtu.be/')) {
+                    videoId = url.split('youtu.be/')[1].split('?')[0];
+                }
+
+                return `https://www.youtube.com/embed/${videoId}?rel=0`;
+            }
+
+            function renderList() {
+                const list = document.getElementById('videoList');
+                list.innerHTML = '';
+
+                videos.forEach((video, index) => {
+                    const card = document.createElement('div');
+                    const title = currentLang === 'en' ? video.enTitle : video.esTitle;
+                    const desc = currentLang === 'en' ? video.enDesc : video.esDesc;
+                    card.className = 'video-card';
+                    card.onclick = () => openVideo(index);
+                    card.innerHTML = `
+                        <div class="video-title">${title}</div>
+                        <div>${desc.length > 80 ? desc.substring(0, 80) + '...' : desc}</div>
+                    `;
+
+                    list.appendChild(card);
+                });
+            }
+
+            function openVideo(index) {
+                const video = videos[index];
+                const title = currentLang === 'en' ? video.enTitle : video.esTitle;
+                const desc = currentLang === 'en' ? video.enDesc : video.esDesc;
+
+                document.getElementById('videoTitle').innerText = title;
+                document.getElementById('videoDescription').innerText = desc;
+                document.getElementById('videoFrame').src = getEmbedLink(video.link);
+                document.getElementById('videoPage').dataset.index = index;
+                document.getElementById('videoList').classList.add('hidden');
+                document.getElementById('videoPage').classList.remove('hidden');
+            }
+
+            function showList() {
+                document.getElementById('videoFrame').src = '';
+                document.getElementById('videoPage').classList.add('hidden');
+                document.getElementById('videoList').classList.remove('hidden');
+            }
+
+            loadVideos();
+            setLanguage(currentLang);
+        </script>
+
+    </body>
+</html>
