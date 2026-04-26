@@ -54,8 +54,10 @@ iframe {
   color: white;
 }
 
-.footer a {
-  color: inherit;
+.footer a,
+.footer a:visited,
+.footer a:active {
+  color: white;
   text-decoration: underline;
 }
 
