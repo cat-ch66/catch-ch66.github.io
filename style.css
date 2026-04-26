@@ -58,7 +58,7 @@ iframe {
 .footer a:visited,
 .footer a:hover,
 .footer a:active {
-  color: white !important;
+  color: white;
   text-decoration: underline;
 }
 
