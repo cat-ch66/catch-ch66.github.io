@@ -7,7 +7,6 @@
         <link rel="stylesheet" href="style.css" />
     </head>
     <body>
-
         <header>
             <div class="header-content">
                 <span id="siteTitle">CIC Videos</span>
@@ -33,9 +32,7 @@
             </div>
         </main>
 
-        <footer class="footer" id="footerText">
-            2026 by Rachel Ibarra Channell
-        </footer>
+       <footer class="footer" id="footerText"></footer>
 
         <script>
             let currentLang = 'en';
@@ -43,13 +40,13 @@
             const uiText = {
                 en: {
                     title: "CIC Videos",
-                    back: "← Back",
-                    footer: "2026 by Rachel Ibarra Channell"
+                    back: "Back",
+                    footer: '2026 by <a href="https://rachel1o1.github.io/" target="_blank">Rachel Ibarra Channell</a>'
                 },
                 es: {
                     title: "Vídeos CIC",
-                    back: "← Regresar",
-                    footer: "2026 por Rachel Ibarra Channell"
+                    back: "Regresar",
+                    footer: '2026 por <a href="https://rachel1o1.github.io/" target="_blank">Rachel Ibarra Channell</a>'
                 }
             };
 
@@ -73,7 +70,7 @@
 
                 document.getElementById('siteTitle').innerText = uiText[lang].title;
                 document.getElementById('backBtn').innerText = uiText[lang].back;
-                document.getElementById('footerText').innerText = uiText[lang].footer;
+                document.getElementById('footerText').innerHTML = uiText[lang].footer;
 
                 renderList();
 

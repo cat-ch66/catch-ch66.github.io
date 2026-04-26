@@ -54,6 +54,15 @@ iframe {
   color: white;
 }
 
+.footer a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.footer a:hover {
+  opacity: 0.8;
+}
+
 .back-btn {
   margin-bottom: 1rem;
   padding: 0.5rem 1rem;
